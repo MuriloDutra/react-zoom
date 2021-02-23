@@ -1,23 +1,20 @@
 import './App.css';
-
-declare var ZoomMtg
+import { ZoomMtg } from '@zoomus/websdk'
 
 ZoomMtg.setZoomJSLib('https://source.zoom.us/1.9.0/lib', '/av');
-
 ZoomMtg.preLoadWasm();
 ZoomMtg.prepareJssdk();
 
 function App() {
-
   // setup your signature endpoint here: https://github.com/zoom/websdk-sample-signature-node.js
-  var signatureEndpoint = ''
-  var apiKey = ''
-  var meetingNumber = '123456789'
+  var signatureEndpoint = 'http://localhost:4000'
+  var apiKey = '*'
+  var meetingNumber = '*'
   var role = 0
   var leaveUrl = 'http://localhost:3000'
-  var userName = 'React'
+  var userName = 'React User'
   var userEmail = ''
-  var passWord = ''
+  var passWord = '*'
 
   function getSignature(e) {
     e.preventDefault();
@@ -25,17 +22,13 @@ function App() {
     fetch(signatureEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        meetingNumber: meetingNumber,
-        role: role
-      })
-    }).then(res => res.json())
-    .then(response => {
-      startMeeting(response.signature)
-    }).catch(error => {
-      console.error(error)
+      body: JSON.stringify({meetingNumber: meetingNumber, role: role})
     })
+    .then(res => res.json())
+    .then(response => startMeeting(response.signature))
+    .catch(error => console.error(error))
   }
+
 
   function startMeeting(signature) {
     document.getElementById('zmmtg-root').style.display = 'block'
@@ -68,15 +61,16 @@ function App() {
     })
   }
 
+
   return (
     <div className="App">
       <main>
         <h1>Zoom WebSDK Sample React</h1>
-
         <button onClick={getSignature}>Join Meeting</button>
       </main>
     </div>
   );
 }
+
 
 export default App;
